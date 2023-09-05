@@ -67,7 +67,12 @@ router.post("/login", async (req, res) => {
 // Get User Data
 router.get("/userdata", async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ message: "Authorization header missing" });
+    }
+
+    const token = authHeader.split(" ")[1];
     const decodedToken = jwt.verify(token, secretKey);
 
     if (!decodedToken) {
